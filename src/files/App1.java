@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
 
 
 
@@ -12,14 +13,15 @@ public class App1 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Πληκτρολογήστε το όνομα του παραγόμενου αρχείου:");
+
+        System.out.println("Πληκτρολογήστε το όνομα του παραγόμενου αρχείου (με κατάληξη .txt):");
         String outputFileName = in.nextLine();
-        String tempDir = System.getProperty("java.io.tmpdir");
-        String inputFilePath = tempDir + "nums";
-        String outputFilePath = tempDir + outputFileName;
+
+        File fdIn = new File("C:/Users/eleni/IdeaProjects/Epanaliptiko_Project/src/files/nums.txt"); //hardcoded input file
+        File fdOut = new File(outputFileName);
 
         try {
-            int[] numbers = FileReader("nums");
+            int[] numbers = FileReader(fdIn);
             Arrays.sort(numbers);
             List<int[]> combinations = CombinationGenerator(numbers, 6);
 
@@ -30,7 +32,7 @@ public class App1 {
                 }
             }
 
-            outputFile(Validity, outputFileName);
+            outputFile(Validity, fdOut);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,8 +41,8 @@ public class App1 {
 
     }
 
-    private static int[] FileReader(String sampletxt) throws IOException {
-        BufferedReader filereader = new BufferedReader(new FileReader( "nums"));
+    public static int[] FileReader(File fdIn) throws IOException {
+        BufferedReader filereader = new BufferedReader(new FileReader(fdIn));
         List<Integer> NumList = new ArrayList<>();
         String chr;
 
@@ -63,8 +65,8 @@ public class App1 {
         return numbers;
     }
 
-    private static void outputFile(List<int[]> combinations, String sampletxt) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(sampletxt));
+    public static void outputFile(List<int[]> combinations, File fdOut) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fdOut));
         for (int[] combination : combinations) {
             writer.write(Arrays.toString(combination));
             writer.newLine();
@@ -72,7 +74,7 @@ public class App1 {
         writer.close();
     }
 
-    private static List<int[]> CombinationGenerator(int[] numbers, int k) {
+    public static List<int[]> CombinationGenerator(int[] numbers, int k) {
         List<int[]> combinations = new ArrayList<>();
         CombinationGenerator(combinations, new int[k], numbers, 0, 0, k);
         return combinations;
@@ -90,7 +92,7 @@ public class App1 {
         }
     }
 
-    private static boolean ValidityCheck(int[] combination) {
+    public static boolean ValidityCheck(int[] combination) {
         return countEven(combination) <= 4 &&
                 countOdd(combination) <= 4 &&
                 countConsecutive(combination) <= 2 &&
@@ -98,7 +100,7 @@ public class App1 {
                 countSameDecade(combination) <= 3;
     }
 
-    private static int countEven(int[] combination) {
+    public static int countEven(int[] combination) {
         int counter = 0;
         for (int number : combination) {
             if (number % 2 == 0) {
@@ -108,7 +110,7 @@ public class App1 {
         return counter;
     }
 
-    private static int countOdd(int[] combination) {
+    public static int countOdd(int[] combination) {
         int count = 0;
         for (int number : combination) {
             if (number % 2 != 0) {
@@ -118,7 +120,7 @@ public class App1 {
         return count;
     }
 
-    private static int countConsecutive(int[] combination) {
+    public static int countConsecutive(int[] combination) {
         int count = 0;
         for (int i = 0; i < combination.length - 1; i++) {
             if (combination[i + 1] == combination[i] + 1) {
@@ -128,7 +130,7 @@ public class App1 {
         return count;
     }
 
-    private static int countSameLastDigit(int[] combination) {
+    public static int countSameLastDigit(int[] combination) {
         int[] lastDigitCount = new int[10];
         for (int number : combination) {
             lastDigitCount[number % 10]++;
@@ -142,7 +144,7 @@ public class App1 {
         return maxCount;
     }
 
-    private static int countSameDecade(int[] combination) {
+    public static int countSameDecade(int[] combination) {
         int[] decadeCount = new int[5];
         for (int number : combination) {
             decadeCount[number / 10]++;
